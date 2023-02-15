@@ -1,5 +1,11 @@
 package br.eti.roberto.android20222;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -8,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -39,8 +47,50 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                  //      .setAction("Action", null).show();
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                PendingIntent pendingIntent =
+                        PendingIntent.getActivity(
+                                getApplicationContext(),
+                                0, intent, 0);
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(getApplicationContext());
+                String NOTIFICATION_CHANEL_ID = "my_chanel_id_01";
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    NotificationChannel notificationChannel = new
+                            NotificationChannel(
+                                    NOTIFICATION_CHANEL_ID,
+                            "my notification",
+                            NotificationManager.IMPORTANCE_HIGH);
+                    notificationChannel.setDescription(
+                            "Description");
+                    notificationChannel.setLightColor(
+                            Color.RED);
+                    notificationChannel.enableLights(true);
+                    notificationChannel.setVibrationPattern(
+                            new long[]{0,1000,500,1000});
+                    notificationChannel.enableVibration(true);
+                    notificationManager.createNotificationChannel(
+                            notificationChannel);
+
+                    NotificationCompat.Builder builder = new
+                            NotificationCompat.Builder(
+                                    getApplicationContext(),
+                            NOTIFICATION_CHANEL_ID)
+                            .setContentTitle("Minha Notificação")
+                            .setContentText("Minha primeira notificação")
+                            .setSmallIcon(R.drawable.ic_launcher_background)
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                            .setContentIntent(pendingIntent)
+                            .setAutoCancel(true);
+
+                    notificationManager.notify(
+                            0001, builder.build()
+                    );
+                }
             }
         });
     }
