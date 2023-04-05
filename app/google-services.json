@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "495863187957",
+    "project_id": "teste-25d26",
+    "storage_bucket": "teste-25d26.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495863187957:android:2e6d29bec691ecf62878bc",
+        "android_client_info": {
+          "package_name": "br.eti.roberto.android20222"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495863187957-dpbpf11867vl6avhg9fto68i80iup6q5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGZs5UCGADxUFtmY9Mp5W-5SXpqrj1xcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495863187957-dpbpf11867vl6avhg9fto68i80iup6q5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

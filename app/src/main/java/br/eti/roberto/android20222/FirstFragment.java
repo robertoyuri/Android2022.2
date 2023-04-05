@@ -4,22 +4,49 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ktx.Firebase;
 
 import br.eti.roberto.android20222.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    Usuario usuario;
+    FirebaseAuth autenticacao;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+
+
+        DatabaseReference database;
+        database = FirebaseDatabase.getInstance().
+                getReference();
+        String id = database.push().getKey();
+        Usuario user = new Usuario(
+                id, "Roberto Franco",
+                "roberto.franco@ufra.edu.br",
+                "123456");
+        database.child(id).setValue(user);
+        database.removeValue();
+
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -44,4 +71,37 @@ public class FirstFragment extends Fragment {
         binding = null;
     }
 
+    private void cadastrarusuario() {
+        autenticacao = ConficuracaoFireBase.Firebaseaautenticacao();
+        autenticacao.createUserWithEmailAndPassword(
+                usuario.getEmail(),usuario.getSenha()
+        ).addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(getActivity(), "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    String excessao = "";
+                    try {
+                        throw task.getException();
+                    } catch (FirebaseAuthWeakPasswordException e){
+                        excessao = "Digite uma senha mais forte!";
+                    }catch (FirebaseAuthInvalidCredentialsException e){
+                        excessao = "Digite um E-mail válido!";
+                    }catch (FirebaseAuthUserCollisionException e){
+                        excessao = "Conta já cadastrada!";
+                    }catch (Exception e){
+                        excessao = "Erro ao cadastrar usuário!" + e.getMessage();
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(getActivity(), excessao.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+
+
+    }
 }
