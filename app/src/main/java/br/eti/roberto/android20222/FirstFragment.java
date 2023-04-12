@@ -1,6 +1,7 @@
 package br.eti.roberto.android20222;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,8 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.ktx.Firebase;
+
+import java.util.concurrent.ExecutionException;
 
 import br.eti.roberto.android20222.databinding.FragmentFirstBinding;
 
@@ -55,6 +57,28 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.buttonCEP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String retorno = null;
+                try {
+                    String cepp = binding.editTextTextCEP.getText().toString();
+                    Log.d("CEP", cepp);
+                    retorno = new HttpService(cepp).execute().get();
+                    Log.d("CEP Result", retorno);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(getContext(), retorno, Toast.LENGTH_LONG).show();
+                Log.d("Result CEP", retorno);
+            }
+        });
+
+
+
 
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
